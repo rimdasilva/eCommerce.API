@@ -8,6 +8,9 @@ services:
   productdb:
     image: mysql:8.0.29
 
+  basketdb:
+    image: redis:alpine
+
 
   # Infrastructure section ----------------------------------------------------------------------
   pgadmin:
@@ -29,6 +32,12 @@ services:
     build:
      context: .
      dockerfile: Services/Product.API/Dockerfile
+
+  basket.api:
+    image: ${DOCKER_REGISTRY-}basket-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+     context: .
+     dockerfile: Services/Basket.API/Dockerfile
 
 
 # Network section -------------------------------------------------------------------------------
