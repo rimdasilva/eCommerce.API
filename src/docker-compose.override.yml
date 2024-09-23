@@ -31,7 +31,18 @@ services:
     container_name: basketdb
     restart: always
     ports:
-        - "6379:6379" 
+        - "6379:6379"
+        
+  orderdb:
+    container_name: orderdb
+    environment:
+        SA_PASSWORD: "Passw0rd!"
+        ACCEPT_EULA: "Y"
+    restart: always
+    volumes:
+        - sqlserver_data:/var/lib/sqlserver/data    
+    ports:
+        - "1435:1433" 
 
 
   # Infrastructure section ------------------------------------------------------------------------------------------
@@ -90,4 +101,16 @@ services:
         - basketdb
     ports:
         - "6004:80"
+    restart: always
+
+  ordering.api:
+    container_name: ordering.api
+    environment: 
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=http://+80
+        - "ConnectionStrings:DefaultConnection=Server=orderdb;Database=OrderDb;User Id=sa;Password=Passw0rd!;Multipleactiveresultsets=True;TrustServerCertificate=True"
+    depends_on:
+        - orderdb
+    ports:
+        - "6005:80" 
     restart: always

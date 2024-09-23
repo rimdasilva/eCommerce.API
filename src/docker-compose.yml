@@ -11,6 +11,9 @@ services:
   basketdb:
     image: redis:alpine
 
+  orderdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+
 
   # Infrastructure section ----------------------------------------------------------------------
   pgadmin:
@@ -39,6 +42,12 @@ services:
      context: .
      dockerfile: Services/Basket.API/Dockerfile
 
+  ordering.api:
+    image: ${DOCKER_REGISTRY-}ordering-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+     context: .
+     dockerfile: Services/Ordering/Ordering.API/Dockerfile
+
 
 # Network section -------------------------------------------------------------------------------
 networks:
@@ -59,3 +68,6 @@ volumes:
 
   portainer_data:
     name: portainer_data
+
+  sqlserver_data:
+    name: sqlserver_data
